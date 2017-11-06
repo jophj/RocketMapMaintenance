@@ -1,5 +1,5 @@
-const test = require('./test-accounts')
-module.exports = {
-  test: test
-}
+const testAccounts = require('./test-accounts')
 
+module.exports = {
+  test: testAccounts
+}

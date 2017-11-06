@@ -36,7 +36,7 @@ async function testAccounts (accounts) {
   await writeFile('./PGNumbra/accounts.csv', csvRows.join('\n'))
 
   // await shadowcheck()
-  await loadCheckedAccounts()
+  return loadCheckedAccounts()
 }
 
-module.export = testAccounts
+module.exports = testAccounts
