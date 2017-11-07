@@ -1,3 +1,3 @@
 [submodule "PGNumbra"]
 	path = PGNumbra
-	url = git@github.com:sLoPPydrive/PGNumbra.git
+	url = https://github.com/sLoPPydrive/PGNumbra.git
