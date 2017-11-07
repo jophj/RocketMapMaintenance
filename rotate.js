@@ -40,8 +40,19 @@ const args = parser.parseArgs()
 
 async function Main (args) {
   const accountsToCheck = await loadAccountsFromCsv(args.accounts_csv)
+  let accounts = {
+    good: [],
+    captcha: [],
+    blind: [],
+    banned: [],
+    error: []
+  }
   console.log(`Checking status of ${accountsToCheck.length} accounts...`)
-  const accounts = await accountsChecker.test(accountsToCheck)
+  if (accountsToCheck.length > 0) {
+    const timer = setInterval(() => process.stderr.write('.'), 1000)
+    accounts = await accountsChecker.test(accountsToCheck)
+    clearInterval(timer)
+  }
   console.log(`Found ${accounts.good.length} good accounts`)
   console.log(`Found ${accounts.captcha.length} captcha accounts`)
   console.log(`Found ${accounts.blind.length} blind accounts`)
@@ -56,13 +67,16 @@ async function Main (args) {
     banned: [],
     error: []
   }
+  let pool = null
   let count = parseInt(args.count) - accounts.good.length
   if (count > 0) {
     console.log(`Searching for ${count} good accounts from the pool`)
-    const pool = await loadAccountsFromCsv(args.pool_csv)
+    pool = await loadAccountsFromCsv(args.pool_csv)
     while (count > 0 && pool.length > 0) {
       const poolToCheck = pool.splice(0, batchSize)
+      const timer = setInterval(() => process.stderr.write('.'), 1000)
       const checked = await accountsChecker.test(poolToCheck)
+      clearInterval(timer)
       poolChecked.good = poolChecked.good.concat(checked.good)
       poolChecked.captcha = poolChecked.captcha.concat(checked.captcha)
       poolChecked.blind = poolChecked.blind.concat(checked.blind)
@@ -82,6 +96,10 @@ async function Main (args) {
     if (count > 0 && pool.length === 0) {
       console.log('Pool size not large enough. Only', accounts.good.length + poolChecked.good.length, 'good accounts')
     }
+  }
+
+  if (pool) {
+    await writeAccountsToCsv(pool, args.pool_csv)
   }
 
   const blind = accounts.blind.concat(poolChecked.blind)
