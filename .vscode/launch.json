@@ -10,8 +10,11 @@
       "name": "Launch Program",
       "program": "${workspaceFolder}/rotate.js",
       "args": [
-        "-a PGNumbra/accounts.csv",
-        "-p pool.csv"
+        "-a",
+        "accounts.csv",
+        "-p",
+        "accounts-pool.csv",
+        "-c 5"
       ]
     }
   ]

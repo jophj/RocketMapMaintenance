@@ -7,7 +7,8 @@ function parseCsv (accountsCsv) {
 
 async function loadAccounts (csvFile) {
   try {
-    const accountsCsv = (await readFile(csvFile)).toString()
+    const fileContent = await readFile(csvFile)
+    const accountsCsv = fileContent.toString()
     return parseCsv(accountsCsv)
   } catch (e) {
     return []
