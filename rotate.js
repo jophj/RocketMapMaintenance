@@ -102,10 +102,16 @@ async function Main (args) {
     await writeAccountsToCsv(pool, args.pool_csv)
   }
 
-  const blind = accounts.blind.concat(poolChecked.blind)
+  const oldBlind = await loadAccountsFromCsv(args.accounts_csv.replace('.csv', '-blind.csv'))
+  const blind = oldBlind
+    .concat(accounts.blind)
+    .concat(poolChecked.blind)
+    .concat(oldBlind)
   await writeAccountsToCsv(blind, args.accounts_csv.replace('.csv', '-blind.csv'))
 
-  const trash = accounts.banned
+  const oldTrash = await loadAccountsFromCsv(args.accounts_csv.replace('.csv', '-trash.csv'))
+  const trash = oldTrash
+    .concat(accounts.banned)
     .concat(accounts.captcha)
     .concat(accounts.error)
     .concat(poolChecked.banned)
