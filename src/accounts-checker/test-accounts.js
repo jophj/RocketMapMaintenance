@@ -3,7 +3,7 @@ const exec = util.promisify(require('child_process').exec)
 const { loadAccountsFromCsv, writeAccountsToCsv } = require('../util')
 
 async function shadowcheck () {
-  await exec('python shadowcheck.py', { cwd: 'PGNumbra' })
+  await exec('python shadowcheck.py', { maxBuffer: 10 * 1024 * 1024, cwd: 'PGNumbra' })
 }
 
 async function loadCheckedAccounts () {
